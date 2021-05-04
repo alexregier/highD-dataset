@@ -1,6 +1,7 @@
 import os
 import imageio as iio
 import matplotlib as mpl
+import threading
 
 from data_management.read_csv import *
 
@@ -22,6 +23,7 @@ class VisualizationPlot(object):
         self.changed_button = False
         self.rect_map = {}
         self.plotted_objects = []
+        self.anim_running = False
 
         # Create figure and axes
         if fig is None:
@@ -58,6 +60,7 @@ class VisualizationPlot(object):
         self.ax_button_previous = self.fig.add_axes([0.05, 0.035, 0.02, 0.07])  # Previous button
         self.ax_button_next = self.fig.add_axes([0.325, 0.035, 0.02, 0.07])  # Next button
         self.ax_button_next2 = self.fig.add_axes([0.35, 0.035, 0.025, 0.07])  # Next x5 button
+        self.ax_button_anim = self.fig.add_axes([0.4, 0.035, 0.025, 0.07])
 
         # Define the widgets
         self.frame_slider = DiscreteSlider(self.ax_slider, 'Frame', 1, self.maximum_frames, valinit=self.current_frame,
@@ -67,12 +70,15 @@ class VisualizationPlot(object):
         self.button_next = Button(self.ax_button_next, 'Next')
         self.button_next2 = Button(self.ax_button_next2, 'Next x5')
 
+        self.button_anim = Button(self.ax_button_anim, 'Anim')
+
         # Define the callbacks for the widgets' actions
         self.frame_slider.on_changed(self.update_slider)
         self.button_previous.on_clicked(self.update_button_previous)
         self.button_next.on_clicked(self.update_button_next)
         self.button_previous2.on_clicked(self.update_button_previous2)
         self.button_next2.on_clicked(self.update_button_next2)
+        self.button_anim.on_clicked(self.toggle_anim)
 
         self.ax.set_autoscale_on(False)
 
@@ -121,6 +127,23 @@ class VisualizationPlot(object):
         self.update_figure()
         self.frame_slider.update_val_external(self.current_frame)
         self.fig.canvas.draw_idle()
+
+    def trigger_update_online(self):
+        self.remove_patches()
+        self.update_figure()
+        self.frame_slider.update_val_external(self.current_frame)
+        self.fig.canvas.draw()
+
+    def toggle_anim(self, _):
+        self.anim_running = not self.anim_running
+        if self.anim_running:
+            self.anim_loop()
+
+    def anim_loop(self):
+        if self.anim_running and self.current_frame < self.maximum_frames:
+            self.current_frame = self.current_frame + 2
+            self.trigger_update_online()
+            threading.Timer(0.01, self.anim_loop).start()
 
     def update_figure(self):
         # Dictionaries for the style of the different objects that are visualized
