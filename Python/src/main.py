@@ -8,22 +8,33 @@ from visualization.visualize_frame import VisualizationPlot
 
 
 def create_args():
+    temp_parser = argparse.ArgumentParser(description="ParameterOptimizer")
+    temp_parser.add_argument('--num', default=1, type=int)
+    temp_arguments = vars(temp_parser.parse_args())
+
+    num = str(temp_arguments["num"]).zfill(2)
+
+    # ----
+
     parser = argparse.ArgumentParser(description="ParameterOptimizer")
     # --- Input paths ---
-    parser.add_argument('--input_path', default="../data/01_tracks.csv", type=str,
+
+    parser.add_argument('--num', default=1, type=int)
+
+    parser.add_argument('--input_path', default=f"../data/{num}_tracks.csv", type=str,
                         help='CSV file of the tracks')
-    parser.add_argument('--input_static_path', default="../data/01_tracksMeta.csv",
+    parser.add_argument('--input_static_path', default=f"../data/{num}_tracksMeta.csv",
                         type=str,
                         help='Static meta data file for each track')
-    parser.add_argument('--input_meta_path', default="../data/01_recordingMeta.csv",
+    parser.add_argument('--input_meta_path', default=f"../data/{num}_recordingMeta.csv",
                         type=str,
                         help='Static meta data file for the whole video')
-    parser.add_argument('--pickle_path', default="../data/01.pickle", type=str,
+    parser.add_argument('--pickle_path', default=f"../data/{num}.pickle", type=str,
                         help='Converted pickle file that contains corresponding information of the "input_path" file')
     # --- Settings ---
     parser.add_argument('--visualize', default=True, type=lambda x: (str(x).lower() == 'true'),
                         help='True if you want to visualize the data.')
-    parser.add_argument('--background_image', default="../data/01_highway.png", type=str,
+    parser.add_argument('--background_image', default=f"../data/{num}_highway.png", type=str,
                         help='Optional: you can specify the correlating background image.')
 
     # --- Visualization settings ---
