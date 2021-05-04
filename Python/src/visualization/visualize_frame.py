@@ -1,5 +1,4 @@
 import os
-import scipy.ndimage
 import imageio as iio
 import matplotlib as mpl
 
