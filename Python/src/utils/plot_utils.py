@@ -6,6 +6,7 @@ class DiscreteSlider(Slider):
         self.inc = kwargs.pop('increment', 1)
         self.valfmt = '%s'
         Slider.__init__(self, *args, **kwargs)
+        self.changecallback = lambda v: ()
 
     def set_val(self, val):
         if self.val != val:
@@ -20,8 +21,14 @@ class DiscreteSlider(Slider):
             self.val = val
             if not self.eventson:
                 return
-            for cid, func in self.observers.items():
-                func(discrete_val)
+
+            self.changecallback(discrete_val)
+
+            # for cid, func in self.observers.items():
+            #     func(discrete_val)
+
+    def on_changed(self, func):
+        self.changecallback = func
 
     def update_val_external(self, val):
         self.set_val(val)
