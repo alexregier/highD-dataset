@@ -23,7 +23,7 @@ def create_args():
     # --- Settings ---
     parser.add_argument('--visualize', default=True, type=lambda x: (str(x).lower() == 'true'),
                         help='True if you want to visualize the data.')
-    parser.add_argument('--background_image', default="../data/01_highway.jpg", type=str,
+    parser.add_argument('--background_image', default="../data/01_highway.png", type=str,
                         help='Optional: you can specify the correlating background image.')
 
     # --- Visualization settings ---
