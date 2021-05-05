@@ -47,7 +47,7 @@ class VisualizationPlot(object):
             self.background_image = None
             self.y_sign = -1
             self.outer_line_thickness = .2
-            self.lane_color = "white"
+            self.lane_color = "green"
             self.plot_highway()
 
         # Initialize the plot with the bounding boxes of the first frame
